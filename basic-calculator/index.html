@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general body */
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+        /* Style for the calculator display input */
+        .calculator-display {
+            font-size: 2.5rem; /* Larger font size for display */
+            text-align: right;
+            padding: 1rem;
+            background-color: #e0e0e0; /* Slightly darker background for contrast */
+            border: none;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+            color: #333;
+        }
+        /* Style for calculator buttons */
+        .calculator-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 500;
+            padding: 1.5rem 1rem; /* Adjust padding for button size */
+            border-radius: 0.75rem; /* Rounded corners */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Soft shadow */
+            user-select: none; /* Prevent text selection on buttons */
+        }
+        /* Number and decimal buttons */
+        .calculator-button.number {
+            background-color: #ffffff; /* White background */
+            color: #333;
+        }
+        .calculator-button.number:hover {
+            background-color: #f0f0f0; /* Light gray on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .calculator-button.number:active {
+            background-color: #e0e0e0; /* Darker gray on active */
+            transform: translateY(0); /* Press down effect */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Operator buttons */
+        .calculator-button.operator {
+            background-color: #6366f1; /* Indigo color */
+            color: #ffffff;
+        }
+        .calculator-button.operator:hover {
+            background-color: #4f46e5; /* Darker indigo on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .calculator-button.operator:active {
+            background-color: #4338ca; /* Even darker indigo on active */
+            transform: translateY(0);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Clear button */
+        .calculator-button.clear {
+            background-color: #ef4444; /* Red color */
+            color: #ffffff;
+        }
+        .calculator-button.clear:hover {
+            background-color: #dc2626; /* Darker red on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .calculator-button.clear:active {
+            background-color: #b91c1c; /* Even darker red on active */
+            transform: translateY(0);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Equals button */
+        .calculator-button.equals {
+            background-color: #22c55e; /* Green color */
+            color: #ffffff;
+        }
+        .calculator-button.equals:hover {
+            background-color: #16a34a; /* Darker green on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .calculator-button.equals:active {
+            background-color: #15803d; /* Even darker green on active */
+            transform: translateY(0);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 640px) {
+            .calculator-container {
+                width: 95%; /* Make calculator wider on small screens */
+                padding: 1rem;
+            }
+            .calculator-display {
+                font-size: 2rem;
+            }
+            .calculator-button {
+                font-size: 1.25rem;
+                padding: 1rem 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container bg-white p-6 rounded-xl shadow-2xl w-96 max-w-full">
+        <!-- Calculator Display -->
+        <input type="text" id="display" class="calculator-display w-full mb-4 focus:outline-none" readonly value="0">
+
+        <!-- Calculator Buttons Grid -->
+        <div class="grid grid-cols-4 gap-4">
+            <!-- Row 1 -->
+            <button class="calculator-button clear col-span-3" data-value="C">C</button>
+            <button class="calculator-button operator" data-value="/">/</button>
+
+            <!-- Row 2 -->
+            <button class="calculator-button number" data-value="7">7</button>
+            <button class="calculator-button number" data-value="8">8</button>
+            <button class="calculator-button number" data-value="9">9</button>
+            <button class="calculator-button operator" data-value="*">x</button>
+
+            <!-- Row 3 -->
+            <button class="calculator-button number" data-value="4">4</button>
+            <button class="calculator-button number" data-value="5">5</button>
+            <button class="calculator-button number" data-value="6">6</button>
+            <button class="calculator-button operator" data-value="-">-</button>
+
+            <!-- Row 4 -->
+            <button class="calculator-button number" data-value="1">1</button>
+            <button class="calculator-button number" data-value="2">2</button>
+            <button class="calculator-button number" data-value="3">3</button>
+            <button class="calculator-button operator" data-value="+">+</button>
+
+            <!-- Row 5 -->
+            <button class="calculator-button number col-span-2" data-value="0">0</button>
+            <button class="calculator-button number" data-value=".">.</button>
+            <button class="calculator-button equals" data-value="=">=</button>
+        </div>
+    </div>
+
+    <script>
+        // Get the display input element
+        const display = document.getElementById('display');
+        // Get all calculator buttons
+        const buttons = document.querySelectorAll('.calculator-button');
+
+        // Variable to store the current expression
+        let currentExpression = '';
+        // Flag to check if the last input was an operator
+        let lastInputWasOperator = false;
+        // Flag to check if a decimal point has already been used in the current number
+        let decimalUsed = false;
+
+        // Add event listener to each button
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.dataset.value; // Get the data-value attribute of the button
+
+                if (value === 'C') {
+                    // Clear the display and reset variables
+                    currentExpression = '';
+                    display.value = '0';
+                    lastInputWasOperator = false;
+                    decimalUsed = false;
+                } else if (value === '=') {
+                    try {
+                        // Evaluate the expression
+                        // Replace 'x' with '*' for evaluation
+                        const result = eval(currentExpression.replace(/x/g, '*'));
+                        // If the result is a whole number, display it without trailing .0
+                        display.value = Number.isInteger(result) ? result : result.toFixed(5); // Limit decimal places for display
+                        currentExpression = String(result); // Set current expression to the result for further calculations
+                        lastInputWasOperator = false;
+                        decimalUsed = currentExpression.includes('.'); // Check if result contains a decimal
+                    } catch (error) {
+                        // Handle errors (e.g., invalid expression)
+                        display.value = 'Error';
+                        currentExpression = '';
+                        lastInputWasOperator = false;
+                        decimalUsed = false;
+                    }
+                } else if (['+', '-', '*', '/'].includes(value)) {
+                    // Handle operators
+                    if (currentExpression === '' && value !== '-') {
+                        // Prevent starting with an operator unless it's a negative sign
+                        return;
+                    }
+                    if (lastInputWasOperator) {
+                        // If the last input was an operator, replace it with the new one
+                        currentExpression = currentExpression.slice(0, -1) + value;
+                    } else {
+                        currentExpression += value;
+                    }
+                    display.value = value; // Show the operator on display temporarily
+                    lastInputWasOperator = true;
+                    decimalUsed = false; // Reset decimal flag for the next number
+                } else if (value === '.') {
+                    // Handle decimal point
+                    if (!decimalUsed) {
+                        if (currentExpression === '' || lastInputWasOperator) {
+                            // If starting a new number or after an operator, prepend '0.'
+                            currentExpression += '0.';
+                            display.value = '0.';
+                        } else {
+                            currentExpression += value;
+                            display.value += value;
+                        }
+                        decimalUsed = true;
+                        lastInputWasOperator = false;
+                    }
+                } else {
+                    // Handle numbers
+                    if (display.value === '0' && value !== '.') {
+                        // If display is '0' and a number is pressed, replace '0'
+                        display.value = value;
+                    } else if (lastInputWasOperator) {
+                        // If last input was an operator, start a new number on display
+                        display.value = value;
+                    } else {
+                        // Append number to display
+                        display.value += value;
+                    }
+                    currentExpression += value;
+                    lastInputWasOperator = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
